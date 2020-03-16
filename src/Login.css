@@ -1,0 +1,43 @@
+.Login {
+    display: flex;
+    justify-content: center;
+}
+
+
+.loginForm {
+    max-width: 350px;
+    height: 200px;
+    display: flex;
+    flex: 0 1 300px;
+    justify-content: space-around;
+    align-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 3.5vh;
+    margin-left: 1vw;
+    margin-right: 1vw;
+
+    border: .25px solid grey;
+    padding: 15px;
+}
+
+.pleaseLogin {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+#username, #password {
+    width: 95%;
+    height: 25px;
+    padding-left: 10px;
+}
+
+#loginButton {
+    width: 100%;
+    height: 25px;
+    border: 1px solid black;
+}
+
+.error {
+    color: red;
+}
