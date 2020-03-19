@@ -1,7 +1,7 @@
 export async function login({username, password}) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (username === 'ron' && password === 'password') {
+            if (username === 'a' && password === 'a') {
                 resolve();
             } else {
                 reject();
