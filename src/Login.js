@@ -1,111 +1,46 @@
-import React, {useReducer} from 'react';
-import './Login.css';
-import {login} from './utils';
+import React, {useCallback, useContext} from 'react';
+import {withRouter, Redirect} from "react-router";
+import app from "./base.js";
+import { AuthContext } from "./Auth.js";
 
-function loginReducer(state, action) {
-    switch (action.type) {
-        case 'field': {
-            return {
-                ...state,
-                [action.field]: action.value
+const Login = ({history}) => {
+    const handleLogin = useCallback(async event => {
+        event.preventDefault();
+        const {email, password} = event.target.elements;
+            try {
+                await app
+                    .auth()
+                    .signInWithEmailAndPassword(email.value, password.value);
+                    history.push("/");
+            } catch (error) {
+                alert(error);
+            }
+        }, [history]);
 
-            }
-        }
-        case 'login': {
-            return {
-                ...state,
-                isLoading: true,
-                error: ''
-            };
-        }
-        case 'success': {
-            return {
-                ...state,
-                isLoggedIn: true
-            }
-        }
-        case 'error': {
-            return {
-                ...state,
-                error: 'incorrect username or password',
-                isLoading: false,
-                username: '',
-                password: ''
-            }
-        }
-        case 'logout': {
-            return {
-                ...state,
-                isLoggedIn: false,
-                isLoading: false,
-                username: '',
-                password: ''
-            }
-        }
-    
-        default:
-            break;
-    }
-    return state;
-}
+        const { currentUser} = useContext(AuthContext);
 
-const initialState = {
-    username: '',
-    password: '',
-    isLoading: false,
-    error: '',
-    isLoggedIn: false
+        if (currentUser) {
+            return <Redirect to ="/" />;
+        }
+
+        return (
+            <div>
+                <h1>Login</h1>
+                <form onSubmit={handleLogin}>
+                    <label>
+                        Email
+                        <input name="email" type="email" placeholder="email"></input>
+                    </label>
+                    <label>
+                        Password
+                        <input name="password" type="password" placeholder="password"></input>
+                    </label>
+                    <button type="submit">
+                        Login
+                    </button>
+                </form>
+            </div>
+        );        
 };
 
-export default function Login(){
-    const [state, dispatch] = useReducer(loginReducer, initialState);
-
-    const {username, password, isLoading, error, isLoggedIn} = state;
-    const onSubmit = async e => {
-        e.preventDefault();
-
-        dispatch({type: 'login'});
-
-        try {
-            await login({ username, password });
-            dispatch({type: 'success'});
-        } catch(error){
-            dispatch({type: 'error'})
-        }
-    };
-
-    return (
-        <div className="Login">
-            <div className="login-container">
-                {isLoggedIn ? (
-                 <>
-                    <div className="greetings">Greetings {username}</div>{' '}
-                    <button onClick={()=>dispatch({type: 'logout'})}>Log out</button>
-                </>
-                ) :
-                <form className='loginForm' onSubmit={onSubmit}>
-                    <p className="pleaseLogin">Login</p>
-                    <input
-                        id='username'
-                        type="text"
-                        placeholder="username"
-                        value={username}
-                        onChange={e => dispatch({type: 'field', field: 'username', value: e.currentTarget.value})}></input>
-                    <input 
-                        id='password'
-                        type="password"
-                        placeholder="password"
-                        autocomplete="new-password"
-                        value={password}
-                        onChange={e => dispatch({type: 'field', field: 'password', value: e.currentTarget.value})}>
-                    </input>
-                    {error && <p className="error">{error}</p>}
-                    <button id="loginButton" type="submit" disabled={isLoading}>
-                        {isLoading ? "Logging in..." : "Submit"}
-                    </button>
-                </form>}
-            </div>
-        </div>
-    )
-
-}
+export default withRouter(Login);
