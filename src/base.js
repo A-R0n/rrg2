@@ -2,8 +2,6 @@ require("dotenv").config();
 var firebase = require('firebase/app');
 require('firebase/auth');
 require('firebase/database');
-// import firebase from 'firebase/app';
-// import "firebase/auth";
 
 const {REACT_APP_FIREBASE_KEY, REACT_APP_FIREBASE_DOMAIN, REACT_APP_FIREBASE_DATABASE,
     REACT_APP_FIREBASE_PROJECT_ID, REACT_APP_FIREBASE_STORAGE_BUCKET,
